@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Summarizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <h1>SummarAIze</h1>
+        </div>
+        <div class="header-actions">
+            <button id="settingsBtn" class="icon-btn header-btn" title="API Settings"><i class="fa-solid fa-gear"></i></button>
+            <button id="themeToggle" class="icon-btn header-btn" title="Toggle Dark/Light Mode"><i class="fa-solid fa-moon"></i></button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Settings Modal (Hidden by default) -->
+        <div id="settingsModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>API Settings</h2>
+                    <button id="closeSettings" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-desc">Configure your API provider. Your key is stored securely in your browser's local storage.</p>
+                    <div class="form-group">
+                        <label for="apiProvider">API Provider</label>
+                        <select id="apiProvider">
+                            <option value="groq">Groq</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="gemini">Google Gemini</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apiKey">API Key</label>
+                        <input type="password" id="apiKey" placeholder="Enter your API Key">
+                    </div>
+                    <div class="form-group">
+                        <label for="apiModel">Model</label>
+                        <select id="apiModel">
+                            <!-- Populated dynamically via JS -->
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="workspace">
+            <!-- Left panel: Input -->
+            <div class="panel input-panel">
+                <div class="panel-header">
+                    <h2>Input Text</h2>
+                    <div class="actions">
+                        <button class="icon-btn" id="uploadFileBtn" title="Upload .txt"><i class="fa-solid fa-file-arrow-up"></i></button>
+                        <input type="file" id="fileInput" accept=".txt" hidden>
+                        <button class="icon-btn" id="pasteBtn" title="Paste from clipboard"><i class="fa-solid fa-clipboard"></i></button>
+                        <button class="icon-btn" id="clearBtn" title="Clear text"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="textarea-wrapper">
+                    <textarea id="inputText" placeholder="Paste or type your text here..."></textarea>
+                </div>
+                <div class="stats-bar">
+                    <span id="inputCharCount">0 characters</span>
+                    <span id="inputWordCount">0 words</span>
+                </div>
+            </div>
+
+            <!-- Controls Panel -->
+            <div class="controls-panel">
+                <div class="control-group">
+                    <label for="summaryLength">Length</label>
+                    <select id="summaryLength">
+                        <option value="short">Short</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="detailed">Detailed</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="summaryTone">Tone/Style</label>
+                    <select id="summaryTone">
+                        <option value="neutral" selected>Neutral</option>
+                        <option value="simple">Simple</option>
+                        <option value="formal">Formal</option>
+                        <option value="bullet points">Bullet Points</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="summaryLanguage">Language</label>
+                    <select id="summaryLanguage">
+                        <option value="English" selected>English</option>
+                        <option value="Spanish">Spanish</option>
+                        <option value="French">French</option>
+                        <option value="German">German</option>
+                    </select>
+                </div>
+                
+                <button id="summarizeBtn" class="btn btn-primary btn-large">
+                    <i class="fa-solid fa-bolt"></i> Summarize
+                </button>
+            </div>
+
+            <!-- Right panel: Output -->
+            <div class="panel output-panel">
+                <div class="panel-header">
+                    <h2>Summary</h2>
+                    <div class="actions">
+                        <button class="icon-btn" id="regenerateBtn" title="Regenerate summary" disabled><i class="fa-solid fa-rotate-right"></i></button>
+                        <button class="icon-btn" id="copyBtn" title="Copy to clipboard" disabled><i class="fa-regular fa-copy"></i></button>
+                        <button class="icon-btn" id="downloadBtn" title="Download .txt" disabled><i class="fa-solid fa-download"></i></button>
+                    </div>
+                </div>
+                
+                <div class="textarea-wrapper">
+                    <div id="loadingIndicator" class="loading hidden">
+                        <div class="spinner"></div>
+                        <p>Generating summary...</p>
+                    </div>
+                    <textarea id="outputText" readonly placeholder="Your summary will appear here..."></textarea>
+                </div>
+
+                <div id="errorMessage" class="error-msg hidden">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span id="errorText">Error text</span>
+                </div>
+
+                <div class="stats-bar output-stats">
+                    <span id="outputWordCount">0 words</span>
+                    <span id="reductionPercent">Reduction: 0%</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
